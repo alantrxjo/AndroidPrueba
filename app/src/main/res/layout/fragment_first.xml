@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pub.FirstFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/poppins_light"
+            android:paddingVertical="20dp"
+            android:text="Iniciar sesión"
+            android:textAlignment="center"
+            android:textColor="#D9631E"
+            android:textSize="36dp"></TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:paddingVertical="20dp"
+            android:text="Inicia sesión para continuar"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:textColor="#D9631E"
+            android:layout_marginBottom="50dp"></TextView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Usuario"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            app:startIconDrawable="@drawable/ic_person"
+            app:counterEnabled="true"
+            app:counterMaxLength="30">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiet_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:maxLength="30"
+                android:text="alantrejo@gmail.com"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            app:startIconDrawable="@drawable/ic_password"
+            app:counterEnabled="true"
+            app:counterMaxLength="12"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiet_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:text="12345678"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="log in"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/white"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="90dp"
+            android:layout_marginLeft="90dp"
+            android:backgroundTint="#D9631E"></Button>
+        <Button
+            android:id="@+id/btn_to_registro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes una cuenta? Regístrate"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="#D9631E"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"></Button>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
