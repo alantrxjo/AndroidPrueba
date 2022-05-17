@@ -11,14 +11,20 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.softconsultingiqt.R;
 import com.example.softconsultingiqt.databinding.FragmentSecondBinding;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+        //mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mAuth = FirebaseAuth.getInstance();
 
         binding.btnToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
