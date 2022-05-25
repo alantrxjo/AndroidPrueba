@@ -1,12 +1,17 @@
 package com.example.softconsultingiqt;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -15,27 +20,26 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.softconsultingiqt.databinding.ActivityInicioBinding;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class InicioActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityInicioBinding binding;
+    //private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityInicioBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
+        mAuth = FirebaseAuth.getInstance();
 
         setSupportActionBar(binding.appBarInicio.toolbar);
-        binding.appBarInicio.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -57,9 +61,48 @@ public class InicioActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            salir();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_inicio);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    //Metodo salir para que al salir se muestre una alerta
+    public void salir() {
+        AlertDialog.Builder alerta = new AlertDialog.Builder(InicioActivity.this);
+        alerta.setTitle("Cerrar sesión")
+                .setMessage("¿Realmente deseas salir?")
+                .setIcon(R.drawable.ic_warning)
+                .setNegativeButton("Quedarme", null)
+                .setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Usamos finish para quitar esta actividad
+                        //del stack y no regresar sin pasar al login
+                        finish();
+                        startActivity(
+                                new Intent(
+                                        InicioActivity.this,
+                                        MainActivity.class
+                                ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        );
+                    }
+                })
+                .setCancelable(true)
+                .show();
+        FirebaseAuth.getInstance().signOut();
+    }
+    @Override
+    public void onBackPressed() {
+        salir();
     }
 }
