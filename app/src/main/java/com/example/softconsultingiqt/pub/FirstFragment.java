@@ -23,6 +23,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class FirstFragment extends Fragment {
 
@@ -40,29 +41,34 @@ public class FirstFragment extends Fragment {
             public void onClick(View view) {
                 final String email = binding.tietUsuario.getText().toString();
                 final String password = binding.tietPassword.getText().toString();
-
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("Éxito", "signInWithEmail<:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w("No exitoso", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(getActivity(), "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
+                if(validar())
+                {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d("Éxito", "signInWithEmail<:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        updateUI(user);
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w("No exitoso", "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(getActivity(), "Correo o contraseña incorrecta.",
+                                                Toast.LENGTH_SHORT).show();
+                                        updateUI(null);
+                                    }
                                 }
-                            }
-                        });
-
-
+                            });
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),"Faltan datos",Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
 
         binding.btnToRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +79,19 @@ public class FirstFragment extends Fragment {
             }
         });
 
+        binding.btnToPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(
+                        FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_PasswordFragment);
+            }
+        });
+
         return binding.getRoot();
     }
 
     public void updateUI(FirebaseUser account){
-
         if(account != null){
             Toast.makeText(getActivity(),"You Signed In successfully",Toast.LENGTH_LONG).show();
             startActivity(
@@ -86,11 +100,28 @@ public class FirstFragment extends Fragment {
                             InicioActivity.class
                     )
             );
-
         }else {
             Toast.makeText(getActivity(),"You Didnt signed in",Toast.LENGTH_LONG).show();
         }
+    }
 
+    public boolean validar()
+    {
+        boolean ret= true;
+
+        String valorcorreo = binding.tietUsuario.getText().toString();
+        String valorpass = binding.tietPassword.getText().toString();
+        if(valorcorreo.isEmpty())
+        {
+            binding.tietUsuario.setError("Llenar el campo");
+            ret= false;
+        }
+        if(valorpass.isEmpty() )
+        {
+            binding.tietPassword.setError("Llenar el campo");
+            ret= false;
+        }
+        return ret;
     }
 
     @Override
