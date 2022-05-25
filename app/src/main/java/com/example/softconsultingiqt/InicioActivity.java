@@ -33,8 +33,8 @@ public class InicioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityInicioBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
         mAuth = FirebaseAuth.getInstance();
 
@@ -65,7 +65,6 @@ public class InicioActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             salir();
-            FirebaseAuth.getInstance().signOut();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -80,7 +79,7 @@ public class InicioActivity extends AppCompatActivity {
     //Metodo salir para que al salir se muestre una alerta
     public void salir() {
         AlertDialog.Builder alerta = new AlertDialog.Builder(InicioActivity.this);
-        alerta.setTitle("Salir de Zappataxo")
+        alerta.setTitle("Cerrar sesión")
                 .setMessage("¿Realmente deseas salir?")
                 .setIcon(R.drawable.ic_warning)
                 .setNegativeButton("Quedarme", null)
@@ -89,16 +88,21 @@ public class InicioActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Usamos finish para quitar esta actividad
                         //del stack y no regresar sin pasar al login
+                        finish();
                         startActivity(
                                 new Intent(
                                         InicioActivity.this,
                                         MainActivity.class
                                 ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         );
-                        finish();
                     }
                 })
                 .setCancelable(true)
                 .show();
+        FirebaseAuth.getInstance().signOut();
+    }
+    @Override
+    public void onBackPressed() {
+        salir();
     }
 }
