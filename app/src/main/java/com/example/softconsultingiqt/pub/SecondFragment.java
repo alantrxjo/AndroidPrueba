@@ -51,6 +51,7 @@ public class SecondFragment extends Fragment {
                 final String nombre = binding.tietNombre.getText().toString();
                 final String password = binding.tietPass.getText().toString();
                 final String email = binding.tietCorreo.getText().toString();
+                final Integer tipoUser = 1;
 
                 if (validar() && validarEmail(email) == 200) {
 
@@ -79,24 +80,26 @@ public class SecondFragment extends Fragment {
                                         Map<String,Object > Cliente = new HashMap<>();
                                         Cliente.put("nombre", nombre);
                                         Cliente.put("email", email);
+                                        Cliente.put("tipoUser", tipoUser);
 
                                         String id = mAuth.getCurrentUser().getUid();
 
-                                        db.collection("Cliente")
+                                        db.collection("users")
                                                 .document(id).set(Cliente)
-                                                /*.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
-                                                    public void onSuccess(DocumentReference documentReference) {
-                                                        Toast.makeText(getActivity(), "Guardado Exitoso, id: "+documentReference.getId(),
+                                                    public void onSuccess(Void unused) {
+                                                        Toast.makeText(getActivity(), "Guardado Exitoso, id: "+id,
                                                                 Toast.LENGTH_LONG).show();
                                                     }
-                                                })*/
+                                                })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Log.e("FireApp","Error",e);
                                                     }
                                                 });
+
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w("Algo salió mal: ", "createUserWithEmail:failure", task.getException());
