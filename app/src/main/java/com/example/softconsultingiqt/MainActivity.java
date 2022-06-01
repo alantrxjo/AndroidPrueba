@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -23,6 +25,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference usersRef = db.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +63,33 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Log.d("Ya inicio sesion", "SI");
-            startActivity(
-                    new Intent(
-                            MainActivity.this,
-                            InicioActivity.class
-                    )
-            );
+            FirebaseUser user = mAuth.getCurrentUser();
+            usersRef.whereEqualTo("email", user.getEmail()).whereEqualTo("tipoUser", 1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    if(queryDocumentSnapshots.isEmpty()){
+                        startActivity(
+                                new Intent(
+                                        MainActivity.this,
+                                        DriverActivity.class
+                                )
+                        );
+                    }
+                    else {
+                        startActivity(
+                                new Intent(
+                                        MainActivity.this,
+                                        InicioActivity.class
+                                )
+                        );
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Fallo","fatal error"+e);
+                }
+            });
             finish();
         }
     }

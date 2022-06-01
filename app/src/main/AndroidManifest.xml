@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SoftConsultingIQT">
         <activity
+            android:name=".DriverActivity"
+            android:exported="false"
+            android:label="@string/title_activity_driver"
+            android:theme="@style/Theme.SoftConsultingIQT.NoActionBar" />
+        <activity
             android:name=".InicioActivity"
             android:exported="false"
             android:label="@string/title_activity_inicio"

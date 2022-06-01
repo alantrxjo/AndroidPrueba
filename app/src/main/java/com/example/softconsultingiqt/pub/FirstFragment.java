@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.softconsultingiqt.DriverActivity;
 import com.example.softconsultingiqt.InicioActivity;
 import com.example.softconsultingiqt.R;
 import com.example.softconsultingiqt.databinding.FragmentFirstBinding;
@@ -43,7 +44,7 @@ public class FirstFragment extends Fragment {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference usersRef = db.collection("users");
-    private TextView texto ;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,10 +113,20 @@ public class FirstFragment extends Fragment {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     if(queryDocumentSnapshots.isEmpty()){
-                        Log.d("Entro","entro usu3");
+                        startActivity(
+                                new Intent(
+                                        getActivity(),
+                                        DriverActivity.class
+                                )
+                        );
                     }
                     else {
-                        Log.d("Entro","entro usu1");
+                        startActivity(
+                                new Intent(
+                                        getActivity(),
+                                        InicioActivity.class
+                                )
+                        );
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -126,12 +137,7 @@ public class FirstFragment extends Fragment {
             });
 
             Toast.makeText(getActivity(),"You Signed In successfully",Toast.LENGTH_LONG).show();
-            startActivity(
-                    new Intent(
-                            getActivity(),
-                            InicioActivity.class
-                    )
-            );
+
         }else {
             Toast.makeText(getActivity(),"You Didnt signed in",Toast.LENGTH_LONG).show();
         }
