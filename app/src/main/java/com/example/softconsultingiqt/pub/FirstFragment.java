@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,18 +19,31 @@ import com.example.softconsultingiqt.InicioActivity;
 import com.example.softconsultingiqt.R;
 import com.example.softconsultingiqt.databinding.FragmentFirstBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.core.ViewSnapshot;
+
+import kotlin.reflect.KFunction;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference usersRef = db.collection("users");
+    private TextView texto ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +107,24 @@ public class FirstFragment extends Fragment {
 
     public void updateUI(FirebaseUser account){
         if(account != null){
+            FirebaseUser user = mAuth.getCurrentUser();
+            usersRef.whereEqualTo("email", user.getEmail()).whereEqualTo("tipoUser", 1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    if(queryDocumentSnapshots.isEmpty()){
+                        Log.d("Entro","entro usu3");
+                    }
+                    else {
+                        Log.d("Entro","entro usu1");
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Fallo","fatal error"+e);
+                }
+            });
+
             Toast.makeText(getActivity(),"You Signed In successfully",Toast.LENGTH_LONG).show();
             startActivity(
                     new Intent(
@@ -128,5 +160,26 @@ public class FirstFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public  void  tipoUsu(){
+        FirebaseUser user = mAuth.getCurrentUser();
+        usersRef.whereEqualTo("email", user.getEmail()).whereEqualTo("tipoUser", 1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(queryDocumentSnapshots.isEmpty()){
+                    Log.d("Entro","entro usu3");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Fallo","fatal error"+e);
+            }
+        });
+
+        //Toast.makeText(getActivity(),"Abeeeeerrr" + usu,Toast.LENGTH_LONG).show();
+       // Log.d("Aber", "Abeer"+user);
+
     }
 }

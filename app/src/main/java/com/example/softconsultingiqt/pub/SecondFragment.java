@@ -25,8 +25,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class SecondFragment extends Fragment {
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,7 +134,8 @@ public class SecondFragment extends Fragment {
 
     public void updateUI(FirebaseUser account){
         if(account != null){
-            Toast.makeText(getActivity(),"You Signed In successfully",Toast.LENGTH_LONG).show();
+
+            //Toast.makeText(getActivity(),"You Signed In successfully",Toast.LENGTH_LONG).show();
             startActivity(
                     new Intent(
                             getActivity(),
