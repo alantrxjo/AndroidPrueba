@@ -1,4 +1,4 @@
-package com.example.softconsultingiqt.ui.home;
+package com.example.softconsultingiqt.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,20 +13,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.softconsultingiqt.R;
-import com.example.softconsultingiqt.databinding.FragmentHomeBinding;
+import com.example.softconsultingiqt.databinding.FragmentSlideshowBinding;
+import com.example.softconsultingiqt.databinding.FragmentSlideshowDriverBinding;
 
-public class HomeFragment extends Fragment {
+public class SlideshowFragmentDriver extends Fragment {
 
-    private FragmentHomeBinding binding;
+
+    private FragmentSlideshowDriverBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentSlideshowDriverBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textHome;
 
         return root;
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_driver"
+    app:startDestination="@+id/nav_home_driver">
+
+    <fragment
+        android:id="@+id/nav_home_driver"
+        android:name="com.example.softconsultingiqt.ui.home.HomeFragmentDriver"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home_driver" />
+
+    <fragment
+        android:id="@+id/nav_gallery_driver"
+        android:name="com.example.softconsultingiqt.ui.gallery.GalleryFragmentDriver"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery_driver" />
+
+    <fragment
+        android:id="@+id/nav_slideshow_driver"
+        android:name="com.example.softconsultingiqt.ui.slideshow.SlideshowFragmentDriver"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow_driver" />
+</navigation>

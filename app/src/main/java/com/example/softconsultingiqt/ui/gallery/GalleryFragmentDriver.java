@@ -1,4 +1,4 @@
-package com.example.softconsultingiqt.ui.home;
+package com.example.softconsultingiqt.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,26 +7,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.softconsultingiqt.R;
-import com.example.softconsultingiqt.databinding.FragmentHomeBinding;
+import com.example.softconsultingiqt.databinding.FragmentGalleryDriverBinding;
 
-public class HomeFragment extends Fragment {
+public class GalleryFragmentDriver extends Fragment {
 
-    private FragmentHomeBinding binding;
+
+    private  FragmentGalleryDriverBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentGalleryDriverBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
+        final TextView textView = binding.textGalleryDriver;
 
         return root;
     }
