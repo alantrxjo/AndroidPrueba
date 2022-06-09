@@ -1,0 +1,17 @@
+[
+  {
+    "name": "mobile_navigation",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  },
+  {
+    "name": "mobile_navigation_driver",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  },
+  {
+    "name": "nav_graph",
+    "navigationXmlIds": [],
+    "deepLinks": []
+  }
+]
