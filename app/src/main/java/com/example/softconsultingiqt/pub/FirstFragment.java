@@ -1,6 +1,11 @@
 package com.example.softconsultingiqt.pub;
 
+import static android.content.ContentValues.TAG;
+
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.style.TabStopSpan;
@@ -12,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -35,22 +43,53 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.core.ViewSnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import kotlin.reflect.KFunction;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private String[] PERMISOS;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference usersRef = db.collection("users");
+    public static final int LOCATION_REQUEST_CODE=1001;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        PERMISOS = new String[]{
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+
+    }
+
+    private boolean permisos(Context context,String... PERMISOS){
+        if(context != null && PERMISOS != null){
+            for (String permiso: PERMISOS){
+                if(ActivityCompat.checkSelfPermission(context,permiso)== PackageManager.PERMISSION_GRANTED){
+                    return false;
+                }
+            }
+        }
+            return true;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         //mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mAuth = FirebaseAuth.getInstance();
+
+       // getLocalizacionpp();
+        PermisoLocalizacion();
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +152,26 @@ public class FirstFragment extends Fragment {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     if(queryDocumentSnapshots.isEmpty()){
+                        String idd = mAuth.getCurrentUser().getUid();
+                        Map<String,Object > UbicacionChofer = new HashMap<>();
+                        UbicacionChofer.put("ubicacion", 1);
+                        db.collection("users")
+                                .document(idd).update(UbicacionChofer)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+//                                    Toast.makeText(getActivity(), "Guardado Exitoso, id: "+id,
+//                                            Toast.LENGTH_LONG).show();
+                                        Log.d("Guardado exitosooo", "Id"+idd);
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("FireAppppp","Errorrr",e);
+                                    }
+                                });
                         startActivity(
                                 new Intent(
                                         getActivity(),
@@ -168,24 +227,63 @@ public class FirstFragment extends Fragment {
         binding = null;
     }
 
-    public  void  tipoUsu(){
-        FirebaseUser user = mAuth.getCurrentUser();
-        usersRef.whereEqualTo("email", user.getEmail()).whereEqualTo("tipoUser", 1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if(queryDocumentSnapshots.isEmpty()){
-                    Log.d("Entro","entro usu3");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Fallo","fatal error"+e);
-            }
-        });
+//    private void getLocalizacionpp(){
+//        int permiso = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+//        if (permiso == PackageManager.PERMISSION_DENIED){
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)){
+//
+//            }else {
+//                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+//            }
+//        }
+//    }
 
-        //Toast.makeText(getActivity(),"Abeeeeerrr" + usu,Toast.LENGTH_LONG).show();
-       // Log.d("Aber", "Abeer"+user);
+    private void  PermisoLocalizacion(){
+        if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)){
+                Log.d(TAG,"askLocationPermission:you should show an alert dialog...");
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            }
 
+
+
+        }
+
+        if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
+                Log.d(TAG,"askLocationPermission:you should show an alert dialog...");
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},LOCATION_REQUEST_CODE);
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},LOCATION_REQUEST_CODE);
+            }
+
+
+
+        }
     }
+
+//    public  void  tipoUsu(){
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        usersRef.whereEqualTo("email", user.getEmail()).whereEqualTo("tipoUser", 1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                if(queryDocumentSnapshots.isEmpty()){
+//                    Log.d("Entro","entro usu3");
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d("Fallo","fatal error"+e);
+//            }
+//        });
+//
+//        //Toast.makeText(getActivity(),"Abeeeeerrr" + usu,Toast.LENGTH_LONG).show();
+//       // Log.d("Aber", "Abeer"+user);
+//
+//    }
 }

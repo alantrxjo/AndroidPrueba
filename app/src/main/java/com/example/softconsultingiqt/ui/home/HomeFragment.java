@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.softconsultingiqt.R;
 import com.example.softconsultingiqt.databinding.FragmentHomeBinding;
+import com.google.android.libraries.places.api.Places;
 
 public class HomeFragment extends Fragment {
 
@@ -25,6 +23,10 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        Places.initialize(getActivity(),"AIzaSyAeL253W2VXE-lifAkIFlmPXt4TK_riAiA");
+        Fragment fragment = new MapaFragment();
+
+        getParentFragmentManager().beginTransaction().replace(R.id.frameLayout,fragment).commit();
 
         final TextView textView = binding.textHome;
 

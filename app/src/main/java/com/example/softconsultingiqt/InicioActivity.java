@@ -1,17 +1,35 @@
 package com.example.softconsultingiqt;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,13 +40,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.softconsultingiqt.databinding.ActivityInicioBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class InicioActivity extends AppCompatActivity {
-
+    FusedLocationProviderClient fusedLocationProviderClient;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityInicioBinding binding;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     //private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +62,7 @@ public class InicioActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
         mAuth = FirebaseAuth.getInstance();
-
+        Places.initialize(this,"AIzaSyAeL253W2VXE-lifAkIFlmPXt4TK_riAiA");
         setSupportActionBar(binding.appBarInicio.toolbar);
 
         DrawerLayout drawer = binding.drawerLayout;
@@ -51,6 +76,7 @@ public class InicioActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_inicio);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     @Override
@@ -76,7 +102,7 @@ public class InicioActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    //Metodo salir para que al salir se muestre una alerta
+   // Metodo salir para que al salir se muestre una alerta
     public void salir() {
         AlertDialog.Builder alerta = new AlertDialog.Builder(InicioActivity.this);
         alerta.setTitle("Cerrar sesión")
@@ -95,14 +121,15 @@ public class InicioActivity extends AppCompatActivity {
                                         MainActivity.class
                                 ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         );
-                    }
-                })
+                        FirebaseAuth.getInstance().signOut();
+                            }
+                    })
                 .setCancelable(true)
                 .show();
-        FirebaseAuth.getInstance().signOut();
+
+
     }
     @Override
-    public void onBackPressed() {
-        salir();
-    }
+    public void onBackPressed() {salir();}
+
 }

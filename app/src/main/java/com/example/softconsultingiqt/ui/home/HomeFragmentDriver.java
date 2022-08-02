@@ -27,8 +27,10 @@ public class HomeFragmentDriver extends Fragment {
 
         binding = FragmentHomeDriverBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        Fragment fragment = new MapaFragmentDriver();
+        getParentFragmentManager().beginTransaction().replace(R.id.frameLayoutDriver,fragment).commit();
 
-        final TextView textView = binding.textHomeDriver;
+
 
         return root;
     }
